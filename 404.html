@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <title>ОДО «Консалт» - сайт переехал</title>
+  <style>
+    html, body {
+      height: 100%;
+      margin: 0;
+      font-family: sans-serif;
+    }
+    body {
+      background: linear-gradient(#DFE8F0, #003C8F);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      position: relative;
+      overflow: hidden;
+    }
+    body::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: rgba(255, 255, 255, 0.2);
+      backdrop-filter: blur(2px);
+    }
+    .content {
+      position: relative;
+      z-index: 1;
+      text-align: center;
+      color: #333;
+    }
+    .logo {
+      width: 480px;
+      height: auto;
+      margin-bottom: 20px;
+    }
+    .message {
+      font-size: 1.2rem;
+    }
+    a {
+      color: #0057ff;
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+  <div class="content">
+    <img src="logo.png" alt="ОДО «Консалт»" class="logo">
+    <div class="message" id="status">
+      Загрузка…
+      <noscript>
+        <br>Если загрузка не началась — <a href="https://www.konsalt.by/">перейдите на новый сайт</a>.
+      </noscript>
+    </div>
+  </div>
+
+  <script>
+    const fallbackUrl = "https://www.konsalt.by/";
+    const apiBaseUrl = "https://n8n.konsalt.by/webhook/redirects";
+    const currentUrl = window.location.href;
+    const apiUrl = apiBaseUrl + "?current=" + encodeURIComponent(currentUrl);
+
+    fetch(apiUrl)
+      .then(response => response.json())
+      .then(data => {
+        if (data.redirect) {
+          window.location.href = data.redirect;
+          //document.getElementById('status').innerHTML = data.redirect;
+        } else {
+          document.getElementById('status').innerHTML =
+            `Сайт переехал. <a href="${fallbackUrl}">Перейти на новый сайт</a>.`;
+        }
+      })
+      .catch(err => {
+        console.error(err);
+        document.getElementById('status').innerHTML =
+          `Сайт переехал. <a href="${fallbackUrl}">Перейти на новый сайт</a>.`;
+      });
+  </script>
+</body>
+</html>
